@@ -1,16 +1,18 @@
 import { ThemeProvider } from "@/components/theme-provider";
-import { Button } from "./components/ui/button";
 import { ModeToggle } from "./components/mode-toggle";
 import { ColorThemeToggle } from "./components/color-theme-toggle";
+import SureAlertDialog from "./components/SureAlertDialog";
+import ProjectCard from "./components/ProjectCard";
+import { Button } from "@/components/ui/button";
 
-function App() {
+export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Button>Hi!</Button>
       <ModeToggle />
       <ColorThemeToggle />
+      <SureAlertDialog />
+      <Button>Button</Button>
+      <ProjectCard />
     </ThemeProvider>
   );
 }
-
-export default App;
