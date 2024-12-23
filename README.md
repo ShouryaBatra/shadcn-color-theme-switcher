@@ -10,7 +10,7 @@ This repository provides a ready-to-use implementation for a light/dark mode tog
 
 ## Demo
 
-[Color Theme Switcher Demo]([https://shouryabatra.github.io/shadcn-color-theme-switcher/](https://shadcn-color-theme-switcher.vercel.app/))
+[Color Theme Switcher Demo](https://shadcn-color-theme-switcher.vercel.app/)
 
 ## Installation
 
