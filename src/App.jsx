@@ -1,8 +1,21 @@
+import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip"; // Import TooltipProvider
 import { ModeToggle } from "./components/mode-toggle";
 import { ColorThemeToggle } from "./components/color-theme-toggle";
 import { Button } from "@/components/ui/button";
+import { TrendingUp } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  Label,
+  Pie,
+  PieChart,
+  YAxis,
+  LabelList,
+} from "recharts";
 import {
   Card,
   CardHeader,
@@ -12,7 +25,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label as UILabel } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -49,8 +62,118 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from "@/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Toast, ToastProvider, ToastViewport } from "./components/ui/toast";
+import { useToast } from "./hooks/use-toast";
+import { Toaster } from "./components/ui/toaster";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "./components/ui/chart";
 
 export default function App() {
+  const { toast } = useToast();
+
+  const barChartData = [
+    { month: "January", desktop: 186 },
+    { month: "February", desktop: 305 },
+    { month: "March", desktop: 237 },
+    { month: "April", desktop: 73 },
+    { month: "May", desktop: 209 },
+    { month: "June", desktop: 214 },
+  ];
+
+  const horizontalBarChartData = [
+    { month: "January", desktop: 186, mobile: 80 },
+    { month: "February", desktop: 305, mobile: 200 },
+    { month: "March", desktop: 237, mobile: 120 },
+    { month: "April", desktop: 73, mobile: 190 },
+    { month: "May", desktop: 209, mobile: 130 },
+    { month: "June", desktop: 214, mobile: 140 },
+  ];
+
+  const pieChartData = [
+    { browser: "chrome", visitors: 275 },
+    { browser: "safari", visitors: 200 },
+    { browser: "firefox", visitors: 287 },
+    { browser: "edge", visitors: 173 },
+    { browser: "other", visitors: 190 },
+  ];
+
+  const barChartConfig = {
+    desktop: {
+      label: "Desktop",
+      color: "hsl(var(--primary))",
+    },
+  };
+
+  const horizontalBarChartConfig = {
+    desktop: {
+      label: "Desktop",
+      color: "hsl(var(--primary))",
+    },
+    mobile: {
+      label: "Mobile",
+      color: "hsl(var(--secondary))",
+    },
+    label: {
+      color: "hsl(var(--background))",
+    },
+  };
+
+  const pieChartConfig = {
+    visitors: {
+      label: "Visitors",
+    },
+    chrome: {
+      label: "Chrome",
+      color: "hsl(var(--primary))",
+    },
+    safari: {
+      label: "Safari",
+      color: "hsl(var(--secondary))",
+    },
+    firefox: {
+      label: "Firefox",
+      color: "hsl(var(--accent))",
+    },
+    edge: {
+      label: "Edge",
+      color: "hsl(var(--destructive))",
+    },
+    other: {
+      label: "Other",
+      color: "hsl(var(--muted))",
+    },
+  };
+
+  const totalVisitors = React.useMemo(() => {
+    return pieChartData.reduce((acc, curr) => acc + curr.visitors, 0);
+  }, []);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       {/* Wrap the entire app (or at least the Tooltip component) with TooltipProvider */}
@@ -88,11 +211,11 @@ export default function App() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Name</Label>
+                  <UILabel htmlFor="name">Name</UILabel>
                   <Input id="name" placeholder="Enter your name" />
                 </div>
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <UILabel htmlFor="email">Email</UILabel>
                   <Input
                     id="email"
                     type="email"
@@ -110,11 +233,11 @@ export default function App() {
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Switch id="airplane-mode" />
-                  <Label htmlFor="airplane-mode">Airplane Mode</Label>
+                  <UILabel htmlFor="airplane-mode">Airplane Mode</UILabel>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox id="terms" />
-                  <Label htmlFor="terms">Accept terms and conditions</Label>
+                  <UILabel htmlFor="terms">Accept terms and conditions</UILabel>
                 </div>
               </CardContent>
             </Card>
@@ -128,15 +251,15 @@ export default function App() {
                 <RadioGroup defaultValue="comfortable">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="default" id="r1" />
-                    <Label htmlFor="r1">Default</Label>
+                    <UILabel htmlFor="r1">Default</UILabel>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="comfortable" id="r2" />
-                    <Label htmlFor="r2">Comfortable</Label>
+                    <UILabel htmlFor="r2">Comfortable</UILabel>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="compact" id="r3" />
-                    <Label htmlFor="r3">Compact</Label>
+                    <UILabel htmlFor="r3">Compact</UILabel>
                   </div>
                 </RadioGroup>
               </CardContent>
@@ -314,8 +437,309 @@ export default function App() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Calendar Component */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Calendar</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Calendar
+                  mode="single"
+                  selected={new Date()}
+                  className="rounded-md border"
+                />
+              </CardContent>
+            </Card>
+
+            {/* Command Component */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Command Menu</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Command className="rounded-lg border shadow-md">
+                  <CommandInput placeholder="Type a command or search..." />
+                  <CommandList>
+                    <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandGroup heading="Suggestions">
+                      <CommandItem>Calendar</CommandItem>
+                      <CommandItem>Search Emoji</CommandItem>
+                    </CommandGroup>
+                    <CommandSeparator />
+                    <CommandGroup heading="Settings">
+                      <CommandItem>Profile</CommandItem>
+                      <CommandItem>Settings</CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </CardContent>
+            </Card>
+
+            {/* Dialog Component */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Dialog</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Open Dialog</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone.
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+
+            {/* Scroll Area Component */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Scroll Area</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                  <div className="space-y-4">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className="p-4 border rounded">
+                        Scrollable content {i + 1}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+
+            {/* Skeleton Component */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Skeleton Loading</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+                <Skeleton className="h-4 w-[300px]" />
+                <Skeleton className="h-4 w-[180px]" />
+              </CardContent>
+            </Card>
+
+            {/* Toast Component */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Toast</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  onClick={() => {
+                    toast({
+                      title: "Scheduled: Catch up",
+                      description: "Friday, February 10, 2023 at 3:00 PM",
+                    });
+                  }}
+                >
+                  Show Toast
+                </Button>
+                <ToastProvider>
+                  <ToastViewport />
+                </ToastProvider>
+              </CardContent>
+            </Card>
+
+            {/* Bar Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bar Chart</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={barChartConfig}>
+                  <BarChart data={barChartData} width={400} height={300}>
+                    <CartesianGrid
+                      vertical={false}
+                      stroke="hsl(var(--muted))"
+                    />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Bar
+                      dataKey="desktop"
+                      fill="hsl(var(--primary))"
+                      radius={8}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="flex gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month{" "}
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter>
+            </Card>
+
+            {/* Pie Chart */}
+            <Card className="flex flex-col h-full">
+              <CardHeader className="items-center pb-0">
+                <CardTitle>Pie Chart - Donut with Text</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1 flex items-center justify-center min-h-[400px]">
+                <ChartContainer
+                  config={pieChartConfig}
+                  className="mx-auto aspect-square"
+                >
+                  <PieChart width={400} height={400}>
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                      data={pieChartData}
+                      dataKey="visitors"
+                      nameKey="browser"
+                      innerRadius={80}
+                      outerRadius={120}
+                      strokeWidth={5}
+                      fill="hsl(var(--primary))"
+                      stroke="hsl(var(--background))"
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text
+                                x={viewBox.cx}
+                                y={viewBox.cy}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                              >
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  className="fill-foreground text-3xl font-bold"
+                                >
+                                  {totalVisitors.toLocaleString()}
+                                </tspan>
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={(viewBox.cy || 0) + 24}
+                                  className="fill-muted-foreground"
+                                >
+                                  Visitors
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              </CardContent>
+              <CardFooter className="flex-col gap-2 text-sm">
+                <div className="flex items-center gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month{" "}
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter>
+            </Card>
+
+            {/* Horizontal Bar Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bar Chart - Custom Label</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={horizontalBarChartConfig}>
+                  <BarChart
+                    accessibilityLayer
+                    data={horizontalBarChartData}
+                    layout="vertical"
+                    width={400}
+                    height={300}
+                    margin={{
+                      right: 16,
+                      left: 16,
+                      top: 16,
+                      bottom: 16,
+                    }}
+                  >
+                    <CartesianGrid
+                      horizontal={false}
+                      stroke="hsl(var(--muted))"
+                    />
+                    <YAxis
+                      dataKey="month"
+                      type="category"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickFormatter={(value) => value.slice(0, 3)}
+                      hide
+                    />
+                    <XAxis dataKey="desktop" type="number" hide />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="line" />}
+                    />
+                    <Bar
+                      dataKey="desktop"
+                      layout="vertical"
+                      fill="hsl(var(--primary))"
+                      radius={4}
+                    >
+                      <LabelList
+                        dataKey="month"
+                        position="insideLeft"
+                        offset={8}
+                        className="fill-[hsl(var(--background))]"
+                        fontSize={12}
+                      />
+                      <LabelList
+                        dataKey="desktop"
+                        position="right"
+                        offset={8}
+                        className="fill-foreground"
+                        fontSize={12}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="flex gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month{" "}
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter>
+            </Card>
           </div>
         </div>
+        <Toaster />
       </TooltipProvider>
     </ThemeProvider>
   );
