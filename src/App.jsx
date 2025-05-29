@@ -190,6 +190,193 @@ export default function App() {
 
           {/* Grid Layout for Components */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Bar Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bar Chart</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={barChartConfig}>
+                  <BarChart data={barChartData} width={400} height={300}>
+                    <CartesianGrid
+                      vertical={false}
+                      stroke="hsl(var(--muted))"
+                    />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Bar
+                      dataKey="desktop"
+                      fill="hsl(var(--primary))"
+                      radius={8}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="flex gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month{" "}
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter>
+            </Card>
+
+            {/* Pie Chart */}
+            <Card className="flex flex-col h-full">
+              <CardHeader className="items-center pb-0">
+                <CardTitle>Pie Chart - Donut with Text</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1 flex items-center justify-center min-h-[400px]">
+                <ChartContainer
+                  config={pieChartConfig}
+                  className="mx-auto aspect-square"
+                >
+                  <PieChart width={400} height={400}>
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                      data={pieChartData}
+                      dataKey="visitors"
+                      nameKey="browser"
+                      innerRadius={80}
+                      outerRadius={120}
+                      strokeWidth={5}
+                      fill="hsl(var(--primary))"
+                      stroke="hsl(var(--background))"
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <text
+                                x={viewBox.cx}
+                                y={viewBox.cy}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                              >
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  className="fill-foreground text-3xl font-bold"
+                                >
+                                  {totalVisitors.toLocaleString()}
+                                </tspan>
+                                <tspan
+                                  x={viewBox.cx}
+                                  y={(viewBox.cy || 0) + 24}
+                                  className="fill-muted-foreground"
+                                >
+                                  Visitors
+                                </tspan>
+                              </text>
+                            );
+                          }
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              </CardContent>
+              <CardFooter className="flex-col gap-2 text-sm">
+                <div className="flex items-center gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month{" "}
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter>
+            </Card>
+
+            {/* Horizontal Bar Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bar Chart - Custom Label</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={horizontalBarChartConfig}>
+                  <BarChart
+                    accessibilityLayer
+                    data={horizontalBarChartData}
+                    layout="vertical"
+                    width={400}
+                    height={300}
+                    margin={{
+                      right: 16,
+                      left: 16,
+                      top: 16,
+                      bottom: 16,
+                    }}
+                  >
+                    <CartesianGrid
+                      horizontal={false}
+                      stroke="hsl(var(--muted))"
+                    />
+                    <YAxis
+                      dataKey="month"
+                      type="category"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickFormatter={(value) => value.slice(0, 3)}
+                      hide
+                    />
+                    <XAxis dataKey="desktop" type="number" hide />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="line" />}
+                    />
+                    <Bar
+                      dataKey="desktop"
+                      layout="vertical"
+                      fill="hsl(var(--primary))"
+                      radius={4}
+                    >
+                      <LabelList
+                        dataKey="month"
+                        position="insideLeft"
+                        offset={8}
+                        className="fill-[hsl(var(--background))]"
+                        fontSize={12}
+                      />
+                      <LabelList
+                        dataKey="desktop"
+                        position="right"
+                        offset={8}
+                        className="fill-foreground"
+                        fontSize={12}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="flex gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month{" "}
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter>
+            </Card>
+
             {/* Card Component */}
             <Card>
               <CardHeader>
@@ -549,193 +736,6 @@ export default function App() {
                   <ToastViewport />
                 </ToastProvider>
               </CardContent>
-            </Card>
-
-            {/* Bar Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Bar Chart</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={barChartConfig}>
-                  <BarChart data={barChartData} width={400} height={300}>
-                    <CartesianGrid
-                      vertical={false}
-                      stroke="hsl(var(--muted))"
-                    />
-                    <XAxis
-                      dataKey="month"
-                      tickLine={false}
-                      tickMargin={10}
-                      axisLine={false}
-                      tickFormatter={(value) => value.slice(0, 3)}
-                    />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent hideLabel />}
-                    />
-                    <Bar
-                      dataKey="desktop"
-                      fill="hsl(var(--primary))"
-                      radius={8}
-                    />
-                  </BarChart>
-                </ChartContainer>
-              </CardContent>
-              <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="flex gap-2 font-medium leading-none">
-                  Trending up by 5.2% this month{" "}
-                  <TrendingUp className="h-4 w-4" />
-                </div>
-                <div className="leading-none text-muted-foreground">
-                  Showing total visitors for the last 6 months
-                </div>
-              </CardFooter>
-            </Card>
-
-            {/* Pie Chart */}
-            <Card className="flex flex-col h-full">
-              <CardHeader className="items-center pb-0">
-                <CardTitle>Pie Chart - Donut with Text</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex items-center justify-center min-h-[400px]">
-                <ChartContainer
-                  config={pieChartConfig}
-                  className="mx-auto aspect-square"
-                >
-                  <PieChart width={400} height={400}>
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent hideLabel />}
-                    />
-                    <Pie
-                      data={pieChartData}
-                      dataKey="visitors"
-                      nameKey="browser"
-                      innerRadius={80}
-                      outerRadius={120}
-                      strokeWidth={5}
-                      fill="hsl(var(--primary))"
-                      stroke="hsl(var(--background))"
-                    >
-                      <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <text
-                                x={viewBox.cx}
-                                y={viewBox.cy}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                              >
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={viewBox.cy}
-                                  className="fill-foreground text-3xl font-bold"
-                                >
-                                  {totalVisitors.toLocaleString()}
-                                </tspan>
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) + 24}
-                                  className="fill-muted-foreground"
-                                >
-                                  Visitors
-                                </tspan>
-                              </text>
-                            );
-                          }
-                        }}
-                      />
-                    </Pie>
-                  </PieChart>
-                </ChartContainer>
-              </CardContent>
-              <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 font-medium leading-none">
-                  Trending up by 5.2% this month{" "}
-                  <TrendingUp className="h-4 w-4" />
-                </div>
-                <div className="leading-none text-muted-foreground">
-                  Showing total visitors for the last 6 months
-                </div>
-              </CardFooter>
-            </Card>
-
-            {/* Horizontal Bar Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Bar Chart - Custom Label</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={horizontalBarChartConfig}>
-                  <BarChart
-                    accessibilityLayer
-                    data={horizontalBarChartData}
-                    layout="vertical"
-                    width={400}
-                    height={300}
-                    margin={{
-                      right: 16,
-                      left: 16,
-                      top: 16,
-                      bottom: 16,
-                    }}
-                  >
-                    <CartesianGrid
-                      horizontal={false}
-                      stroke="hsl(var(--muted))"
-                    />
-                    <YAxis
-                      dataKey="month"
-                      type="category"
-                      tickLine={false}
-                      tickMargin={10}
-                      axisLine={false}
-                      tickFormatter={(value) => value.slice(0, 3)}
-                      hide
-                    />
-                    <XAxis dataKey="desktop" type="number" hide />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent indicator="line" />}
-                    />
-                    <Bar
-                      dataKey="desktop"
-                      layout="vertical"
-                      fill="hsl(var(--primary))"
-                      radius={4}
-                    >
-                      <LabelList
-                        dataKey="month"
-                        position="insideLeft"
-                        offset={8}
-                        className="fill-[hsl(var(--background))]"
-                        fontSize={12}
-                      />
-                      <LabelList
-                        dataKey="desktop"
-                        position="right"
-                        offset={8}
-                        className="fill-foreground"
-                        fontSize={12}
-                      />
-                    </Bar>
-                  </BarChart>
-                </ChartContainer>
-              </CardContent>
-              <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="flex gap-2 font-medium leading-none">
-                  Trending up by 5.2% this month{" "}
-                  <TrendingUp className="h-4 w-4" />
-                </div>
-                <div className="leading-none text-muted-foreground">
-                  Showing total visitors for the last 6 months
-                </div>
-              </CardFooter>
             </Card>
           </div>
         </div>
